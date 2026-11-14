@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chat-export-md"
+version = "0.1.0"
+description = "Turn ChatGPT, Claude and Gemini data exports into clean Markdown: archive, search, or move a conversation to another AI when you hit a limit."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Mohammed Al-Saray"}]
+keywords = ["chatgpt", "claude", "gemini", "export", "markdown", "takeout", "conversations", "archive", "backup", "cli"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Environment :: Console",
+]
+
+[project.urls]
+Homepage = "https://github.com/mohammed2345353/chat-export-md"
+Issues = "https://github.com/mohammed2345353/chat-export-md/issues"
+
+[project.scripts]
+chat-export-md = "chat_export_md.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
