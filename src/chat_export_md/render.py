@@ -10,6 +10,12 @@ from typing import Dict, List
 from .parsers import Conversation
 from .tokens import estimate
 
+
+def _write(path, text):
+    """Write UTF-8 with LF endings (Path.write_text has no newline= before Python 3.10)."""
+    with open(path, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(text)
+
 ROLE = {"user": "🧑 You", "assistant": "🤖 Assistant", "tool": "🛠 Tool"}
 SOURCE = {"chatgpt": "ChatGPT", "claude": "Claude", "gemini": "Gemini"}
 
@@ -90,13 +96,13 @@ def write_all(convs: List[Conversation], out: Path, fmt: str = "md", max_tokens:
                                                    "time": m.time.isoformat() if m.time else None} for m in c.messages]},
                                     ensure_ascii=False))
             continue
-        (out / f"{name}.md").write_text(to_markdown(c), encoding="utf-8", newline="\n")
+        _write((out / f"{name}.md"), to_markdown(c))
         if max_tokens:
-            (out / f"{name}.continue.md").write_text(continue_prompt(c, max_tokens), encoding="utf-8", newline="\n")
+            _write((out / f"{name}.continue.md"), continue_prompt(c, max_tokens))
         safe_title = c.title.replace("|", "\\|")
         index.append(f"| {date} | {SOURCE.get(c.source, c.source)} | [{safe_title}]({name}.md) | {len(c.messages)} | {tok:,} |")
     if fmt == "jsonl":
-        (out / "conversations.jsonl").write_text("\n".join(jsonl) + "\n", encoding="utf-8", newline="\n")
+        _write((out / "conversations.jsonl"), "\n".join(jsonl) + "\n")
     else:
-        (out / "index.md").write_text("\n".join(index) + "\n", encoding="utf-8", newline="\n")
+        _write((out / "index.md"), "\n".join(index) + "\n")
     return stats
